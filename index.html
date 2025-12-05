@@ -2,27 +2,57 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Bitrix Python App</title>
-    <style>
-        body { padding: 20px; font-family: Arial; }
-        h1 { color: #667eea; }
-        .btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            margin: 10px 0;
+    <script src="https://api.bitrix24.com/api/v1/"></script>
+    <script>
+        // Логирование
+        console.log('App loaded');
+        console.log('URL:', window.location.href);
+        console.log('Referrer:', document.referrer);
+        
+        // Проверяем, если мы внутри iframe Битрикс
+        if (window.parent !== window) {
+            console.log('Running inside Bitrix24 iframe');
+            
+            // Инициализация приложения
+            BX24.init(function() {
+                console.log('BX24 initialized, auth:', BX24.getAuth());
+                
+                // Завершаем установку
+                BX24.installFinish();
+                
+                // Скрываем инсталляционный экран
+                document.body.innerHTML = `
+                    <div style="padding: 20px; text-align: center;">
+                        <h1>✅ Приложение установлено!</h1>
+                        <p>Python Task Processor готов к работе.</p>
+                        <p>Закройте это окно и откройте любую задачу.</p>
+                    </div>
+                `;
+            });
+        } else {
+            // Если открыли напрямую в браузере
+            document.body.innerHTML = `
+                <div style="padding: 20px;">
+                    <h1>Python Task Processor</h1>
+                    <p>Это приложение для Битрикс24.</p>
+                    <p>Откройте через установку в Битрикс24.</p>
+                </div>
+            `;
         }
+        
+        // Логируем все события
+        window.addEventListener('message', function(event) {
+            console.log('Message received:', event.data);
+        });
+        
+    </script>
+    <style>
+        body { font-family: Arial; padding: 20px; }
     </style>
 </head>
 <body>
-    <h1>Python Task Processor</h1>
-    <p>Приложение для запуска Python-скриптов из задач Битрикс24</p>
-    <button class="btn" onclick="alert('Скрипт запущен')">
-        🚀 Запустить Python-скрипт
-    </button>
+    <div id="app">
+        Загрузка приложения...
+    </div>
 </body>
 </html>
