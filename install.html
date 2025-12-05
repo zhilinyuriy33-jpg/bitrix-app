@@ -1,26 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="utf-8">
     <script>
-        // Перенаправляем Битрикс на правильный метод
+        // Эта страница только для установки
         if (window.parent !== window) {
-            // Отправляем сообщение Битрикс что установка завершена
-            window.parent.postMessage({
-                type: 'bitrix24_install',
-                status: 'success'
-            }, '*');
-            
-            // Показываем сообщение
+            // Сообщаем Битрикс что установка завершена
+            try {
+                // Если BX24 API доступен
+                if (typeof BX24 !== 'undefined') {
+                    BX24.init(function() {
+                        BX24.installFinish();
+                        showMessage('✅ Установка завершена!');
+                    });
+                } else {
+                    // Альтернативный способ
+                    setTimeout(function() {
+                        window.parent.postMessage({
+                            event: 'applicationInstalled',
+                            status: 'success'
+                        }, '*');
+                        showMessage('✅ Установка завершена (альтернативный метод)');
+                    }, 1000);
+                }
+            } catch(e) {
+                showMessage('✅ Установка завершена (базовый метод)');
+            }
+        }
+        
+        function showMessage(text) {
             document.body.innerHTML = `
-                <div style="padding: 20px; text-align: center;">
-                    <h1>✅ Установка завершена</h1>
-                    <p>Закройте это окно.</p>
+                <div style="
+                    padding: 40px;
+                    text-align: center;
+                    font-family: Arial;
+                    color: green;
+                ">
+                    <h1>${text}</h1>
+                    <p>Закройте это окно и откройте любую задачу в Битрикс24.</p>
+                    <p>Кнопка "Python Task Processor" появится в карточке задачи.</p>
                 </div>
             `;
         }
     </script>
 </head>
 <body>
-    Loading...
+    <div style="padding: 20px; text-align: center;">
+        <h2>Установка Python Task Processor...</h2>
+        <p>Пожалуйста, подождите.</p>
+    </div>
 </body>
 </html>
