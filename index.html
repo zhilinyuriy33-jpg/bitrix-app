@@ -1,18 +1,21 @@
-// index.html
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <script src="https://api.bitrix24.com/api/v1/"></script>
     <script>
+        // Проверяем, если это запрос установки
+        const urlParams = new URLSearchParams(window.location.search);
+        const isInstall = urlParams.has('install') || window.location.pathname.includes('install');
+        
         // Логирование
-        console.log('App loaded');
+        console.log('App loaded, isInstall:', isInstall);
         console.log('URL:', window.location.href);
         console.log('Referrer:', document.referrer);
         
         // Проверяем, если мы внутри iframe Битрикс
-        if (window.parent !== window) {
-            console.log('Running inside Bitrix24 iframe');
+        if (window.parent !== window || isInstall) {
+            console.log('Running inside Bitrix24 iframe or install mode');
             
             // Инициализация приложения
             BX24.init(function() {
