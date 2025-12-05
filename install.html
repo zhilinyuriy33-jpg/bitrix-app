@@ -1,3 +1,26 @@
-<?php
-echo 'OK';
-?>
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        // Перенаправляем Битрикс на правильный метод
+        if (window.parent !== window) {
+            // Отправляем сообщение Битрикс что установка завершена
+            window.parent.postMessage({
+                type: 'bitrix24_install',
+                status: 'success'
+            }, '*');
+            
+            // Показываем сообщение
+            document.body.innerHTML = `
+                <div style="padding: 20px; text-align: center;">
+                    <h1>✅ Установка завершена</h1>
+                    <p>Закройте это окно.</p>
+                </div>
+            `;
+        }
+    </script>
+</head>
+<body>
+    Loading...
+</body>
+</html>
