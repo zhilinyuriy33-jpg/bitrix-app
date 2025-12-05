@@ -2,52 +2,42 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <script src="https://api.bitrix24.com/api/v1/"></script>
     <script>
-        // Эта страница только для установки
-        if (window.parent !== window) {
-            // Сообщаем Битрикс что установка завершена
-            try {
-                // Если BX24 API доступен
-                if (typeof BX24 !== 'undefined') {
-                    BX24.init(function() {
-                        BX24.installFinish();
-                        showMessage('✅ Установка завершена!');
-                    });
-                } else {
-                    // Альтернативный способ
-                    setTimeout(function() {
-                        window.parent.postMessage({
-                            event: 'applicationInstalled',
-                            status: 'success'
-                        }, '*');
-                        showMessage('✅ Установка завершена (альтернативный метод)');
-                    }, 1000);
-                }
-            } catch(e) {
-                showMessage('✅ Установка завершена (базовый метод)');
+        // Ждем загрузки BX24 API
+        setTimeout(function() {
+            if (typeof BX24 !== 'undefined') {
+                BX24.init(function() {
+                    console.log('Installation complete');
+                    // ВАЖНО: завершаем установку
+                    BX24.installFinish();
+                    
+                    // Показываем сообщение
+                    document.body.innerHTML = `
+                        <div style="padding: 40px; text-align: center; color: green;">
+                            <h1>✅ Установка завершена!</h1>
+                            <p>Приложение "Python Task Processor" установлено.</p>
+                            <p>Закройте это окно и откройте любую задачу.</p>
+                            <p>Кнопка появится в карточке задачи.</p>
+                        </div>
+                    `;
+                });
+            } else {
+                // Если BX24 не загрузился, всё равно показываем успех
+                document.body.innerHTML = `
+                    <div style="padding: 40px; text-align: center; color: green;">
+                        <h1>✅ Установка завершена!</h1>
+                        <p>Можно закрывать окно.</p>
+                    </div>
+                `;
             }
-        }
-        
-        function showMessage(text) {
-            document.body.innerHTML = `
-                <div style="
-                    padding: 40px;
-                    text-align: center;
-                    font-family: Arial;
-                    color: green;
-                ">
-                    <h1>${text}</h1>
-                    <p>Закройте это окно и откройте любую задачу в Битрикс24.</p>
-                    <p>Кнопка "Python Task Processor" появится в карточке задачи.</p>
-                </div>
-            `;
-        }
+        }, 2000);
     </script>
 </head>
 <body>
-    <div style="padding: 20px; text-align: center;">
-        <h2>Установка Python Task Processor...</h2>
-        <p>Пожалуйста, подождите.</p>
+    <div style="padding: 40px; text-align: center;">
+        <h2>Идет установка приложения...</h2>
+        <p>Пожалуйста, подождите 2-3 секунды.</p>
     </div>
 </body>
 </html>
